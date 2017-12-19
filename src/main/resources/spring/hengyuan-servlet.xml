@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	<!-- 注解驱动 -->
+	<mvc:annotation-driven>
+		<!-- register-defaults属性是  是否注册成默认  ，不想设置为默认直接改成false即可
+		spring默认有一个StringConverter,我们又定义了一个，spring容器中就有了2个字符转换器，
+		 运行时究竟会使用哪一个呢？  ===>  spring有默认规则，自定义的优先-->
+		<mvc:message-converters register-defaults="true">
+			 <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+					<!--  指定构造参数 -->
+			 	<constructor-arg index="0" value="UTF-8" />
+			 </bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+		
+	<!-- 扫描包 -->
+	<context:component-scan base-package="cn.yangsu.web"/>     
+	
+	<!-- 视图解析器 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/view/"/>
+		<property name="suffix" value=".jsp"/>
+		<!-- 查找顺序 -->
+		<property name="order" value="1"/>
+	</bean>
+
+	<!-- 文件上传解析器 -->
+		<bean id="multipartResolver"
+			class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+			<!-- 设定默认编码 -->
+			<property name="defaultEncoding" value="UTF-8"></property>
+			<!-- 设定文件上传的最大值5MB，5*1024*1024 -->
+			<property name="maxUploadSize" value="5242880"></property>
+		</bean>
+	
+</beans>
